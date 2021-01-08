@@ -3,19 +3,19 @@ Proyecto que detecta si una persona tiene diferencias genéticas basándose en
 su secuencia de ADN.
 
 ### Módulos incluidos
+Domain
+```sh
+ http://ec2-3-138-107-27.us-east-2.czompute.amazonaws.com
+```
 
  - 1.- API en donde se pueda detectar si existe mutación enviando la secuencia de ADN
 mediante un JSON, de ser verdadero retornara un status 200 de los contrario un status 403:
 
-APi Local
-```sh
- http://localhost:8000/api/mutation/
-```
-API Producción
+endpoint 
  ```sh
- http://ec2-3-138-107-27.us-east-2.compute.amazonaws.com:8000/api/mutation/
+/api/mutation/
 ```
-Formato
+PayLoad
  ```sh
 {
     "dna":["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
@@ -25,15 +25,11 @@ Formato
 
 - 2.-  API que retorna un JSON con las estadísticas de las verificaciones de ADN:
 
-API Local
-```sh
-http://localhost:8000/api/stats/
-```
-API Producción
+endpoint 
  ```sh
- http://ec2-3-138-107-27.us-east-2.czompute.amazonaws.com:8000/api/stats/
+/api/stats/
 ```
-Formato
+PayLoad
  ```sh
 {
     "count_mutations": 40,
@@ -44,6 +40,7 @@ Formato
 
  ### Requerimientos
  - Docker
+ - Docker Compose
  
 
  ### Instalar Docker
@@ -57,13 +54,12 @@ Formato
 
 ### Instalacion.
 
-Clonación del proyecto
+Clonar el proyecto
 ```sh
-git clone https://github.com/jdht1992/cumplo.git
+git clone https://github.com/jdht1992/guros.git
 ```
 
-Ahora entrar al proyecto guros y ejecutar el comando de docker para crear el contenedor
-
+Dentro del folder de guros ejecutar el comando docker-compose up
 ```sh
 cd guros
 docker-compose up
@@ -71,7 +67,7 @@ docker-compose up
 
 ### Ejecutar proyecto.
 
-Abrir una pestaña de línea de comando separada para ejecutar comandos. Se aplican las migraciones ejecutando el siguente comando.
+Para ejecutar las migraciones, correr el comando.
 ```sh
 docker-compose exec web python manage.py migrate
 ```
