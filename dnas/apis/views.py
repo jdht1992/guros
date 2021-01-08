@@ -8,46 +8,47 @@ from dnas.mutation import Mutation
 
 class StatsAPIView(APIView):
 
-    def get(self, request, format=None):
-        mutations = Organism.objects.filter(mutation=True).count()
-        no_mutations = Organism.objects.filter(mutation=False).count()
-        ratio = 0
-        if no_mutations > 0:
-            ratio = mutations / no_mutations
+    def get(self, request):
+        mutations, no_mutations, ratio = self._get_stats()
         data = {
             "count_mutations": mutations,
             "count_no_mutation": no_mutations,
-            "ratio": f"{ratio:.1f}"
+            "ratio": ratio
         }                                      
         return Response(data)
+
+    def _get_stats(self):
+        positive_mutations, negative_mutations = self._get_mutations_amount()
+        ratio = self._get_ratio(positive_mutations, negative_mutations)
+        return negative_mutations, negative_mutations, ratio
+
+    def _get_mutations_amount(self):
+        positive_mutations = Organism.objects.filter(mutation=True).count()
+        negative_mutations = Organism.objects.filter(mutation=False).count()
+        return positive_mutations, negative_mutations
+
+    def _get_ratio(self, positive_mutations, negative_mutations):
+        if not negative_mutations:
+            return 0.0
+        return float(f"{positive_mutations / negative_mutations:.1f}")
 
 
 class MutationAPIView(APIView):
     def post(self, request, format=None):
         serializer = OrganismModelSerializer(data=request.data)
         if serializer.is_valid():
-            data = serializer.initial_data.get("dna") 
-            mutations = self.has_mutation([list(dna) for dna in data])
-            serializer.save(mutation=mutations)  # instance = serializer.save()   instance.mutation = self._get_mutation()   instance.save()
-            if mutations:
-                return Response(serializer.data, status=status.HTTP_200_OK)
+            instance = serializer.save()
+            instance.mutation = self._get_mutation(instance.dna)
+            instance.save()
+            if instance.mutation:
+                return Response(status=status.HTTP_200_OK)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+        
+    def _get_mutation(self, data):
+        dna_sequence = [list(dna) for dna in data]
+        return self._has_mutation(dna_sequence)
 
-    """
-    def _get_mutation(self):
-        # Y aqui generaria la instancia a la clase Mutation y lo que tienes en has mutation iria aqui 
-        return is_mutation
-
-    """
-
-    def has_mutation(self, data):
-        """
-        return any([mutation.horizontal(data), mutation.vertical(data)])
-        """
-        if Mutation.horizontal(data):
-            return True  
-        if Mutation.vertical(data):
-            return True
-        else:
-            return False
+    def _has_mutation(self, dna_sequence):
+        return any([Mutation.horizontal(dna_sequence), Mutation.vertical(dna_sequence)])
