@@ -4,6 +4,6 @@ from .views import StatsAPIView, MutationAPIView
 
 
 urlpatterns = [
-    path('stats', StatsAPIView.as_view()),
-    path('mutation', MutationAPIView.as_view()),
+    path('stats/', StatsAPIView.as_view()),
+    path('mutation/', MutationAPIView.as_view()),
 ]

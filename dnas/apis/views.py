@@ -44,7 +44,6 @@ class MutationAPIView(APIView):
                 return Response(status=status.HTTP_200_OK)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
         
     def _get_mutation(self, data):
         dna_sequence = [list(dna) for dna in data]
