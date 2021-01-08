@@ -20,7 +20,7 @@ class StatsAPIView(APIView):
     def _get_stats(self):
         positive_mutations, negative_mutations = self._get_mutations_amount()
         ratio = self._get_ratio(positive_mutations, negative_mutations)
-        return negative_mutations, negative_mutations, ratio
+        return positive_mutations, negative_mutations, ratio
 
     def _get_mutations_amount(self):
         positive_mutations = Organism.objects.filter(mutation=True).count()
