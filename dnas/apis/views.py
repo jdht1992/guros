@@ -50,4 +50,4 @@ class MutationAPIView(APIView):
         return self._has_mutation(dna_sequence)
 
     def _has_mutation(self, dna_sequence):
-        return any([Mutation.horizontal(dna_sequence), Mutation.vertical(dna_sequence)])
+        return Mutation.validate_genetic_difference(dna_sequence)

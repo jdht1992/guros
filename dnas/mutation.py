@@ -1,30 +1,29 @@
 class Mutation:
     
     @classmethod
-    def horizontal(cls, data):    
-        found = False
-        j = 0
-        while j < len(data):
-            end = 4
-            while end <= len(data[j]):                    
-                init = end - 4        
-                if len(set(data[j][init : end])) == 1:
-                    found = True
-                    break
-                end+=1    
-            j += 1
-        return found
-
-    @classmethod
-    def vertical(cls, data):
+    def validate_genetic_difference(cls, data):
         found = False    
-        j = 0    
-        while j < len(data[0]):
-            init = 4
-            while init <= len(data):
-                if len(set([data[init - 4][j], data[init - 3][j], data[init - 2][j], data[init - 1][j]])) == 1:
-                    found = True
-                    break               
-                init += 1
-            j+=1
+        row = 0
+        while row < len(data[0]):
+            column = 0
+            while column < len(data):             
+
+                if len(data[0]) - column > 3:
+                    if len(set([data[row][column], data[row][column + 1], data[row][column + 2], data[row][column + 3]])) == 1:
+                        return True
+                    if row < len(data[0]) - 3:
+                        if len(set([data[row][column], data[row + 1][column + 1], data[row + 2][column + 2], data[row + 3][column + 3]])) == 1 or \
+                        len(set([data[row][column], data[row + 1][column], data[row + 2][column], data[row +3][column]])) == 1:
+                            return True
+
+                if column >= 3:
+                    if len(set([data[row][column], data[row - 1][column], data[row - 2][column], data[row - 3][column]])) == 1:
+                        return True
+
+                    if row < len(data[0]) - 3:
+                        if len(set([data[row][column], data[row + 1][column - 1], data[row + 2][column - 2], data[row + 3][column - 3]])) == 1:                   
+                            return True
+                
+                column += 1
+            row+=1
         return found
