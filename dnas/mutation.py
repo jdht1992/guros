@@ -17,11 +17,12 @@ class Mutation:
                             return True
 
                 if column >= 3:
-                    if len(set([data[row][column], data[row - 1][column], data[row - 2][column], data[row - 3][column]])) == 1:
-                        return True
+                    if row < len(data[0]) - 3:
+                        if len(set([data[row][column], data[row + 1][column - 1], data[row + 2][column - 2], data[row + 3][column - 3]])) == 1:
+                            return True
 
                     if row < len(data[0]) - 3:
-                        if len(set([data[row][column], data[row + 1][column - 1], data[row + 2][column - 2], data[row + 3][column - 3]])) == 1:                   
+                        if len(set([data[row][column], data[row + 1][column], data[row + 2][column], data[row + 3][column]])) == 1:                   
                             return True
                 
                 column += 1
